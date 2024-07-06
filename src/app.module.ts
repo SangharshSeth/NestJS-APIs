@@ -14,6 +14,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { RedisModule } from './redis/redis.module';
+import { TypeOrmModule } from "@nestjs/typeorm";
 import * as process from 'node:process';
 
 @Module({
@@ -21,7 +22,16 @@ import * as process from 'node:process';
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     UsersModule,
     MetricsModule,
-    MongooseModule.forRoot(process.env.MONGODB_CONNECTION_STRING),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: 'root',
+      database: 'test',
+      entities: [],
+      synchronize: true,
+    }),
     AuthModule,
     RedisModule,
   ],
