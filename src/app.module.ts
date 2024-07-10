@@ -4,19 +4,20 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from "@nestjs/typeorm";
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MetricsModule } from './metrics/metrics.module';
-import { LoggerMiddleWare } from './middleware/logger';
-import { ConfigModule } from '@nestjs/config';
-import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
-import { RedisModule } from './redis/redis.module';
-import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from './auth/auth.schema';
-import { Session } from './session/session.schema';
+import { AuthService } from './auth/auth.service';
+import { MetricsModule } from './metrics/metrics.module';
 import { Metric } from './metrics/metrics.schema';
+import { LoggerMiddleWare } from './middleware/logger';
+import { RedisModule } from './redis/redis.module';
 import { SessionModule } from './session/session.module';
+import * as process from "node:process"
+import { Session } from './session/session.schema';
 
 @Module({
   imports: [
@@ -24,11 +25,11 @@ import { SessionModule } from './session/session.module';
     MetricsModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'Sameer@123',
-      database: 'development',
+      host: process.env.DB_HOST, // Use environment variable
+      port: parseInt(process.env.DB_PORT),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
       entities: [User, Session, Metric],
       synchronize: true,
     }),

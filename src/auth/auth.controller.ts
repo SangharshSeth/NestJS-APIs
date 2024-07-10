@@ -1,7 +1,7 @@
-import { Body, Controller, HttpException, HttpStatus, Post, Res } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { Body, Controller, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { AuthDto } from "../dto/auth.dto";
-import { Response, response } from 'express';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
@@ -20,16 +20,27 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() loginData: AuthDto, @Res() res: Response): Promise<any> {
+  async login(@Body() loginData: AuthDto, @Req() req: Request, @Res() res: Response): Promise<any> {
     try {
-      const { session_id, expires_at } =  await this.authService.login(loginData);
+      let sessionId = "";
+      if(req.cookies["session_id"] == undefined){
+        console.log("No session_id in cookies")
+        sessionId = "";
+      }
+      else{
+        sessionId = req.cookies["session_id"];
+        console.log("Session id :", sessionId)
+      }
+      console.log("Session id now", sessionId)
+
+      const { session_id, expires_at, message } =  await this.authService.login(loginData, sessionId);
       res.cookie("session_id", session_id, {
         httpOnly: true,
         expires: expires_at,
         sameSite: "strict"
       })
       return res.status(HttpStatus.OK).json({
-        "message": "Login Successful"
+        "message": message
       })
     } catch (error) {
       if (error instanceof HttpException) {

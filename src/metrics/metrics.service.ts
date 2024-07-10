@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Metric } from './metrics.schema';
-import { Repository } from 'typeorm';
 import { LogDto } from 'src/dto/metric.dto';
+import { Repository } from 'typeorm';
+import { Metric } from './metrics.schema';
 
 export interface HealthCheck {
   status: string;
@@ -16,7 +16,7 @@ export class MetricsService {
   ) { }
   healthCheck(): HealthCheck {
     return {
-      status: 'Services are up!',
+      status: 'OK',
     };
   }
 
