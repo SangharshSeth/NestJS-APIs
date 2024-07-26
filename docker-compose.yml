@@ -1,6 +1,7 @@
 services:
   mysql:
     image: mysql
+    container_name: mysql-nestjs
     ports:
       - 3306:3306
     environment:
@@ -13,6 +14,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: nestjs-api-service
     environment:
       - DB_HOST=mysql
       - DB_PORT=3306

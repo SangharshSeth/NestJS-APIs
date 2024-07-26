@@ -1,73 +1,73 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# NestJS Starter Project
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Welcome to the NestJS Starter Project! This project provides a solid foundation to quickly get started with a NestJS application, complete with database connection, environment variable management, and essential scaffolding.
 
-## Description
+## Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **NestJS**: A progressive Node.js framework for building efficient and scalable server-side applications.
+- **TypeORM**: A powerful and flexible ORM for connecting with MySQL.
+- **Environment Variables**: Centralized configuration using environment variables.
+- **Docker**: Containerized development environment with Docker support.
+- **pnpm**: Fast, disk space-efficient package manager.
 
-## Installation
+## Prerequisites
 
-```bash
-$ pnpm install
-```
+Before you begin, ensure you have the following installed:
 
-## Running the app
+- [Node.js](https://nodejs.org/) (v14 or higher)
+- [Docker](https://www.docker.com/)
+- [pnpm](https://pnpm.io/)
 
-```bash
-# development
-$ pnpm run start
+## Getting Started
 
-# watch mode
-$ pnpm run start:dev
+1. **Clone the repository:**
 
-# production mode
-$ pnpm run start:prod
-```
+    ```sh
+    git clone https://github.com/sangharshseth/nestjs-starter-project.git
+    cd nestjs-starter-project
+    ```
 
-## Test
+2. **Install dependencies:**
 
-```bash
-# unit tests
-$ pnpm run test
+    ```sh
+    pnpm install
+    ```
 
-# e2e tests
-$ pnpm run test:e2e
+3. **Set up environment variables:**
 
-# test coverage
-$ pnpm run test:cov
-```
+    Create a `.env` file in the root directory and add your configuration. Refer to `.env.example` for required variables.
 
-## Support
+    ```env
+    DB_HOST=localhost
+    DB_PORT=3306
+    DB_USERNAME=root
+    DB_PASSWORD=password
+    DB_NAME=nestjs_starter
+    ```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+4. **Run the application:**
 
-## Stay in touch
+    ```sh
+    pnpm start:dev
+    ```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+    The application will start on `http://localhost:3000`.
 
-## License
+## Docker Support
 
-Nest is [MIT licensed](LICENSE).
+1. **Build the Docker image:**
+
+    ```sh
+    docker build -t nestjs-starter .
+    ```
+
+2. **Run the Docker container:**
+
+    ```sh
+    docker run -p 3000:3000 --env-file .env nestjs-starter
+    ```
+
+    The application will be available on `http://localhost:3000`.
+
+## Project Structure

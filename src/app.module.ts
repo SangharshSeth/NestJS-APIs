@@ -9,15 +9,15 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { User } from './auth/auth.schema';
+import { User } from './auth/schema/auth.schema';
 import { AuthService } from './auth/auth.service';
 import { MetricsModule } from './metrics/metrics.module';
 import { Metric } from './metrics/metrics.schema';
-import { LoggerMiddleWare } from './middleware/logger';
+import { LoggerMiddleWare } from './common/middleware/logger';
 import { RedisModule } from './redis/redis.module';
 import { SessionModule } from './session/session.module';
 import * as process from "node:process"
-import { Session } from './session/session.schema';
+import { Session } from './session/schema/session.schema';
 
 @Module({
   imports: [

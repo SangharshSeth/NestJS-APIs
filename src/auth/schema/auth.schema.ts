@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, Unique, OneToMany } from "typeorm";
-import { Session } from "../session/session.schema";
+import { Session } from "../../session/schema/session.schema";
 
 
 @Entity('users')

@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { User } from '../auth/auth.schema';
+import { User } from '../../auth/schema/auth.schema';
 
 @Entity('sessions')
 export class Session {

@@ -3,12 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
 import { Repository } from 'typeorm';
-import { AuthDto } from '../dto/auth.dto';
-import { Session } from '../session/session.schema';
-import { User } from './auth.schema';
-
+import { AuthDto } from './dto/auth.dto';
+import { Session } from '../session/schema/session.schema';
+import { User } from './schema/auth.schema';
 
 //TODO: Change types from any to proper return types
+interface SessionType {
+  session_id: string;
+  expires_at: Date;
+}
 
 @Injectable()
 export class AuthService {
@@ -18,7 +21,23 @@ export class AuthService {
     @InjectRepository(Session)
     private sessionRepository: Repository<Session>
   ) { }
-  async signUp(signUpData: AuthDto): Promise<any> {
+
+  private async createSession(user: User): Promise<Session> {
+    const sessionId = randomUUID();
+    const createdAt = new Date();
+    const expiresAt = new Date(createdAt);
+    expiresAt.setMinutes(createdAt.getMinutes() + 5);
+    const session = this.sessionRepository.create({
+      session_id: sessionId,
+      created_at: createdAt,
+      expires_at: expiresAt,
+      user_id: user.user_id,
+      user: user
+    });
+
+    return await this.sessionRepository.save(session);
+  }
+  async signUp(signUpData: AuthDto): Promise<{ message: string }> {
     const { email, password } = signUpData;
     const existingUser = await this.userRepository.findOne({ where: { email } });
     if (existingUser) {
@@ -30,39 +49,46 @@ export class AuthService {
     return { message: 'User registered successfully' };
   }
 
-  async login(loginData: AuthDto, existingSessionId: string): Promise<any> {
+  async login(loginData: AuthDto, existingSessionId: string): Promise<{ status: string, message: string, data?: SessionType }> {
     const { email, password } = loginData;
     const existingUser = await this.userRepository.findOne({ where: { email } });
     if (!existingUser) {
       throw new NotFoundException("User not found! Signup first.");
     }
-
-    //Check if user already logged in
-    if(existingSessionId){
-      console.log("User already exists")
+    //Check if user already logged in server side
+    if (existingSessionId) {
       const session = await this.sessionRepository.findOneBy({
-        user_id: existingUser.user_id
+        session_id: existingSessionId
       })
-      console.log(session.expires_at.getTime(), new Date().getTime());
-      if(session && session.expires_at.getTime() > new Date().getTime()){
-        console.log("good session");
+      if (session && session.expires_at.getTime() > new Date().getTime()) {
+        console.log("Valid Session");
         return {
-          status: "success",
+          status: "Success",
           message: "User already logged in",
-          session_id: existingSessionId,
-          expires_at: session.expires_at
+          data: {
+            session_id: session.session_id,
+            expires_at: session.expires_at
+          }
         }
       }
-      else{
-        console.log("wrong session")
+      //Normally this will not be executed as expired cookie will not be sent
+      else {
+        console.log("Expired Session")
         await this.sessionRepository.delete({
           session_id: existingSessionId
         })
         return {
           status: "Forbidden",
-          message: "Session has expired please relogin"
+          message: "Session has expired please relogin",
         }
       }
+    }
+    else {
+      //delete any dangling session as there is no cookie which means session is expired
+      //need a better approach to handle expired cookies
+      await this.sessionRepository.delete({
+        user_id: existingUser.user_id
+      })
     }
 
     //Proceed with normal login
@@ -70,26 +96,14 @@ export class AuthService {
     if (!passwordMatch) {
       throw new UnauthorizedException("Wrong Password");
     }
-
-    const sessionId = randomUUID();
-    const createdAt = new Date();
-    const expiresAt = new Date(createdAt);
-    expiresAt.setMinutes(createdAt.getMinutes() + 5);
-    const session = await this.sessionRepository.create({
-      session_id: sessionId,
-      created_at: createdAt,
-      expires_at: expiresAt,
-      user_id: existingUser.user_id,
-      user: existingUser
-    })
-
-    await this.sessionRepository.save(session);
-
+    const session = await this.createSession(existingUser);
     return {
-      status: 'SUCCESS',
+      status: 'Success',
       message: 'Login Successful',
-      session_id: sessionId,
-      expires_at: expiresAt
+      data: {
+        session_id: session.session_id,
+        expires_at: session.expires_at
+      }
     };
   }
 

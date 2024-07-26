@@ -1,6 +1,6 @@
 import { Body, Controller, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { AuthDto } from "../dto/auth.dto";
+import { AuthDto } from "./dto/auth.dto";
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -22,24 +22,15 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginData: AuthDto, @Req() req: Request, @Res() res: Response): Promise<any> {
     try {
-      let sessionId = "";
-      if(req.cookies["session_id"] == undefined){
-        console.log("No session_id in cookies")
-        sessionId = "";
-      }
-      else{
-        sessionId = req.cookies["session_id"];
-        console.log("Session id :", sessionId)
-      }
-      console.log("Session id now", sessionId)
-
-      const { session_id, expires_at, message } =  await this.authService.login(loginData, sessionId);
-      res.cookie("session_id", session_id, {
+      const sessionId = req.cookies["session_id"] || "";
+      const { data, message, status } = await this.authService.login(loginData, sessionId);
+      res.cookie("session_id", data.session_id, {
         httpOnly: true,
-        expires: expires_at,
-        sameSite: "strict"
+        expires: data.expires_at,
+        sameSite: "none"
       })
-      return res.status(HttpStatus.OK).json({
+      return res.status(HttpStatus.OK).send({
+        "status": status,
         "message": message
       })
     } catch (error) {
@@ -49,4 +40,5 @@ export class AuthController {
       throw new HttpException(`Unexpected error during login ${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
 }

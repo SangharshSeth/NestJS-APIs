@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Session } from './session.schema';
+import { Session } from './schema/session.schema';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Session])]

@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, Unique, OneToMany, CreateDateColumn } from "typeorm";
-import { LogTypeEnum } from "src/dto/metric.dto";
+import { LogTypeEnum } from "src/metrics/dto/metric.dto";
 
 
 @Entity('metrics')

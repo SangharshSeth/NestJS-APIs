@@ -14,7 +14,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix("/api")
   app.enableCors({
-    origin: "https://www.google.com",
+    origin: "http://127.0.0.1:5500",
     credentials: true
   })
   app.use(cookieParser())
@@ -24,10 +24,11 @@ async function bootstrap() {
     .setDescription('APIs for my backend development expert journey')
     .setVersion('1.0')
     .build();
+  
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   await app.listen(3000);
 }
 bootstrap().then(() => {
-  console.log('Application started on port 3000.');
+  console.log('Application started on port 3000....');
 });
