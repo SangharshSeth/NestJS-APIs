@@ -1,21 +1,28 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from '../../auth/schema/auth.schema';
 
 @Entity('sessions')
 export class Session {
-    @PrimaryGeneratedColumn('uuid')
-    session_id: string;
+  @PrimaryGeneratedColumn('uuid')
+  session_id: string;
 
-    @CreateDateColumn({ type: 'timestamp' })
-    created_at: Date;
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
 
-    @Column({ type: 'timestamp' })
-    expires_at: Date;
+  @Column({ type: 'timestamp' })
+  expires_at: Date;
 
-    @Column()
-    user_id: number;
+  @Column()
+  user_id: number;
 
-    @ManyToOne(() => User)
-    @JoinColumn({ name: 'user_id' })
-    user: User;
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 }

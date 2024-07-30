@@ -5,14 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './schema/auth.schema';
 import { Session } from '../session/schema/session.schema';
 import { Metric } from 'src/metrics/metrics.schema';
-import { SessionModule } from 'src/session/session.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User, Session, Metric]),
-  ],
+  imports: [TypeOrmModule.forFeature([User, Session, Metric])],
   controllers: [AuthController],
   providers: [AuthService],
-  exports: [TypeOrmModule]
+  exports: [TypeOrmModule],
 })
-export class AuthModule { }
+export class AuthModule {}

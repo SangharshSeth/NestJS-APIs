@@ -1,11 +1,19 @@
-import { Body, Controller, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
-import { AuthDto } from "./dto/auth.dto";
+import { AuthDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
   async signup(@Body() signUpData: AuthDto): Promise<any> {
@@ -15,30 +23,42 @@ export class AuthController {
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new HttpException('Unexpected error during signup', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Unexpected error during signup',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   @Post('login')
-  async login(@Body() loginData: AuthDto, @Req() req: Request, @Res() res: Response): Promise<any> {
+  async login(
+    @Body() loginData: AuthDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<any> {
     try {
-      const sessionId = req.cookies["session_id"] || "";
-      const { data, message, status } = await this.authService.login(loginData, sessionId);
-      res.cookie("session_id", data.session_id, {
+      const sessionId = req.cookies['session_id'] || '';
+      const { data, message, status } = await this.authService.login(
+        loginData,
+        sessionId,
+      );
+      res.cookie('session_id', data.session_id, {
         httpOnly: true,
         expires: data.expires_at,
-        sameSite: "none"
-      })
+        sameSite: 'none',
+      });
       return res.status(HttpStatus.OK).send({
-        "status": status,
-        "message": message
-      })
+        status: status,
+        message: message,
+      });
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new HttpException(`Unexpected error during login ${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        `Unexpected error during login ${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
-
 }
