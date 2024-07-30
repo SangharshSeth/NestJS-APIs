@@ -37,15 +37,11 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<any> {
     try {
-      const sessionId = req.cookies['session_id'] || '';
-      const { data, message, status } = await this.authService.login(
-        loginData,
-        sessionId,
-      );
+      const { data, message, status } = await this.authService.login(loginData);
       res.cookie('session_id', data.session_id, {
         httpOnly: true,
-        expires: data.expires_at,
-        sameSite: 'none',
+        secure: false,
+        sameSite: 'lax',
       });
       return res.status(HttpStatus.OK).send({
         status: status,
